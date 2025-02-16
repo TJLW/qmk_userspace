@@ -29,8 +29,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 [1] = LAYOUT(
     KC_TILD,    KC_EXLM,    KC_AT,      KC_HASH,    KC_DLR,     KC_PERC,                            KC_CIRC,    KC_AMPR,    KC_ASTR,    KC_LPRN,    KC_RPRN,    KC_UNDS, 
-    RGB_TOG,    RGB_VAI,    KC_NO,      KC_NO,      KC_NO,      KC_NO,                              KC_NO,      KC_NO,      KC_UP,      KC_LBRC,    KC_RBRC,    KC_DEL, 
-    KC_NO,      RGB_VAD,    KC_NO,      KC_NO,      KC_FIND,    KC_NO,                              KC_NO,      KC_LEFT,    KC_DOWN,    KC_RGHT,    KC_COLN,    KC_DQUO, 
+    KC_TRNS,    RGB_TOG,    RGB_MOD,    RGB_RMOD,   RGB_HUI,    RGB_HUD,                            RGB_SAI,    RGB_SAD,      KC_UP,      KC_LBRC,    KC_RBRC,    KC_DEL, 
+    RGB_VAD,    RGB_VAI,    RGB_VAD,    KC_NO,      KC_FIND,    KC_NO,                              KC_NO,      KC_LEFT,    KC_DOWN,    KC_RGHT,    KC_COLN,    KC_DQUO, 
     KC_TRNS,    KC_UNDO,    KC_CUT,     KC_COPY,    KC_PSTE,    KC_NO,      KC_NO,      KC_NO,      KC_EQL,     KC_PLUS,    KC_LT,      KC_GT,      KC_QUES,    KC_PIPE,  
                             KC_NO,      KC_NO,      KC_NO,      KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_NO,      KC_NO,      KC_NO
 )
@@ -52,10 +52,19 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     // return rotation;
 }
 
+
+
+void render_rgb_status(void) {
+    oled_write_ln("RGB:", false);
+    static char temp[20] = {0};
+    snprintf(temp, sizeof(temp) + 1, "M:%3dH:%3dS:%3dV:%3d", rgb_matrix_config.mode, rgb_matrix_config.hsv.h, rgb_matrix_config.hsv.s, rgb_matrix_config.hsv.v);
+    oled_write(temp, false);
+}
+
+
 bool oled_task_user(void) {
 
     oled_write_P(PSTR("TJLW\n"), false);
-    oled_write_P(PSTR("\n"), false);
     oled_write_P(PSTR("\n"), false);
     oled_write_P(PSTR("\n"), false);
 
@@ -81,6 +90,13 @@ bool oled_task_user(void) {
     // oled_write_P(led_state.caps_lock ? PSTR("CAP ") : PSTR("NOCAP"), false);
     // oled_write_P(led_state.scroll_lock ? PSTR("SCR ") : PSTR("    "), false);
     
+// #    if defined(RGB_MATRIX_ENABLE)
+//     /* Show RGB Options */
+//     oled_write_P(PSTR("\n"), false);
+//     oled_write_P(PSTR("\n"), false);
+//     render_rgb_status();
+// #    endif
+
     return false;
 }
 #endif
